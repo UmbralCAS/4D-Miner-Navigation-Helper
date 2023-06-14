@@ -117,7 +117,7 @@ function readWaypoints()
   end
   local line = file:read("l")
   while line do
-    local matches = string.gmatch(line, "[%w%.]+")
+    local matches = string.gmatch(line, "[%w%.%_]+")
     local data = {}
     local i = 0
     for match in matches do
@@ -163,6 +163,7 @@ function updateWaypointsButtons(panel)
         waypointButtons[i+j] = createButton(panel)
             waypointButtons[i+j].setCaption("X")
             waypointButtons[i+j].setWidth(20)
+            waypointButtons[i+j].setTop(j * 20)
             waypointButtons[i+j].setLeft(i * 128 + 100)
             waypointButtons[i+j].OnClick = function () 
                 waypoints[key] = nil
@@ -242,7 +243,8 @@ function init()
                 submitButton.setTop(48)
                 submitButton.setLeft(80)
                 submitButton.OnClick = function () 
-                    key = edit.Text
+                    local replacements
+                    key, replacements = string.gsub(edit.Text, "[^%w%.%_]", "_") -- replace magic characters
                     modal.ModalResult = 0
                     modal.close()
                 end
